@@ -4,6 +4,8 @@ A modern sales admin dashboard built with **React**, **Vite**, **Redux Toolkit**
 
 **Live Demo:** [https://react-vite-sales-dashboard.vercel.app/](https://react-vite-sales-dashboard.vercel.app/)
 
+**Repository:** [https://github.com/masaiff210880/react-vite-sales-dashboard](https://github.com/masaiff210880/react-vite-sales-dashboard)
+
 ## Tech Stack
 
 | Category | Technology |
@@ -35,20 +37,30 @@ The **User** page (`/user`) displays a data table with Name, Email, Company Name
 
 Search is handled server-side through RTK Query; filtering and sorting run in the browser using `useMemo` in `UserTable.jsx`.
 
-## Getting Started
+## Project Setup
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- [Node.js](https://nodejs.org/) 18 or higher
+- npm (comes with Node.js) or yarn
+- Git
 
-### Installation
+### Steps
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/masaiff210880/react-vite-sales-dashboard.git
+cd react-vite-sales-dashboard
+```
+
+2. **Install dependencies**
 
 ```bash
 npm install
 ```
 
-### Environment Variables
+3. **Create environment file**
 
 Create a `.env` file in the project root:
 
@@ -58,21 +70,23 @@ VITE_BASE_URL=https://jsonplaceholder.typicode.com
 
 This base URL is used by RTK Query in `src/redux-toolkit/service.js` for API requests (e.g. `GET /users`).
 
-### Development
+4. **Start the development server**
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+5. **Open the app**
 
-### Build
+Visit [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Build for production
 
 ```bash
 npm run build
 ```
 
-### Preview Production Build
+### Preview production build
 
 ```bash
 npm run preview
