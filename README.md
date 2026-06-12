@@ -2,9 +2,14 @@
 
 A modern sales admin dashboard built with **React**, **Vite**, **Redux Toolkit**, **Tailwind CSS**, and **React Router**. The app provides an overview of sales metrics, navigation across admin sections, and a user table with search, filter, and sort capabilities.
 
-**Live Demo:** [https://react-vite-sales-dashboard.vercel.app/](https://react-vite-sales-dashboard.vercel.app/)
-**Presentation:** [https://react-vite-sales-dashboard.vercel.app/](https://www.loom.com/share/bc1579de1f9c4fdaa83d01e5ea3c1a06)
-**Repository:** [https://github.com/masaiff210880/react-vite-sales-dashboard](https://github.com/masaiff210880/react-vite-sales-dashboard)
+**Live Demo:**  
+https://react-vite-sales-dashboard.vercel.app/
+
+**Presentation:**  
+https://www.loom.com/share/bc1579de1f9c4fdaa83d01e5ea3c1a06
+
+**Repository:**  
+https://github.com/masaiff210880/react-vite-sales-dashboard
 
 ## Tech Stack
 
