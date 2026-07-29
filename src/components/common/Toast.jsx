@@ -19,34 +19,32 @@ function ToastItem({ id, type, message, onDismiss }) {
   return (
     <div
       role="alert"
-      className={`pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-xl border px-4 py-3 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out ${
+      className={`pointer-events-auto flex w-full items-center gap-4 rounded-[20px] bg-white border border-[#E5E7EB] px-5 py-4 shadow-[0_12px_36px_rgba(15,23,42,0.08)] transition-all duration-300 ease-out ${
         visible && !leaving
-          ? 'translate-y-0 opacity-100'
-          : '-translate-y-3 opacity-0'
-      } ${
-        isSuccess
-          ? 'border-emerald-500/30 bg-emerald-950/90 text-emerald-50'
-          : 'border-red-500/30 bg-red-950/90 text-red-50'
+          ? 'translate-x-0 opacity-100'
+          : 'translate-x-12 opacity-0'
       }`}
     >
       <span
-        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-          isSuccess ? 'bg-emerald-500/20 text-emerald-300' : 'bg-red-500/20 text-red-300'
+        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] text-lg font-semibold ${
+          isSuccess 
+            ? 'bg-[#E8F8F0] text-[#0F5B3C]' 
+            : 'bg-red-50 text-red-700'
         }`}
         aria-hidden="true"
       >
         {isSuccess ? '✓' : '!'}
       </span>
 
-      <p className="flex-1 text-sm font-medium leading-snug">{message}</p>
+      <p className="flex-1 text-sm font-semibold text-[#1F2937] leading-snug">{message}</p>
 
       <button
         type="button"
         onClick={handleDismiss}
-        className="shrink-0 rounded-md p-0.5 text-white/60 transition hover:bg-white/10 hover:text-white"
+        className="shrink-0 rounded-full p-1 text-[#9CA3AF] transition hover:bg-[#F3F4F6] hover:text-[#4B5563]"
         aria-label="Dismiss notification"
       >
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
@@ -58,7 +56,7 @@ export default function ToastContainer({ toasts, onDismiss }) {
   if (!toasts.length) return null
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-4 z-[9999] flex flex-col items-center gap-2 px-4">
+    <div className="pointer-events-none fixed right-6 top-6 z-[9999] flex flex-col items-end gap-3 w-full max-w-[380px] px-4 sm:px-0">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} {...toast} onDismiss={onDismiss} />
       ))}
