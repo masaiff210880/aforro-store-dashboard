@@ -35,7 +35,7 @@ export default function SelectDropdown({ value, options, onChange, placeholder =
             <button
                 type="button"
                 onClick={() => setOpen((current) => !current)}
-                className="flex h-12 w-full items-center justify-between gap-3 rounded-2xl border border-[#E5E7EB] bg-white px-4 text-sm text-[#111827] shadow-sm"
+                className="flex h-12 w-full items-center justify-between gap-3 rounded-lg border border-[#E5E7EB] bg-white px-4 text-sm text-[#111827]"
             >
                 <span
                     className={`truncate ${selectedOption ? 'text-[#111827]' : 'text-[#9CA3AF]'}`}
@@ -48,7 +48,7 @@ export default function SelectDropdown({ value, options, onChange, placeholder =
             </button>
 
             {open && (
-                <ul className="absolute left-0 right-0 z-20 mt-2 max-h-64 overflow-auto rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
+                <ul className="absolute left-0 right-0 z-20 mt-2 max-h-64 overflow-auto rounded-lg border border-[#E5E7EB] bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
                     {options.map((option) => (
                         <li key={option.value}>
                             <button

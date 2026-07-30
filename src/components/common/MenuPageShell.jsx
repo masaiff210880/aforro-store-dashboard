@@ -1,10 +1,14 @@
+import BreadcrumbHeader from './BreadcrumbHeader';
+
 export default function MenuPageShell({ title, description }) {
   return (
-    <div className="mx-auto max-w-8xl">
-      <div className="rounded-[14px] bg-white p-6 shadow-[0_4px_20px_rgba(238,238,238,0.5)] sm:p-8">
-        <h2 className="text-xl font-bold text-[#202224] sm:text-2xl">{title}</h2>
-        <p className="mt-2 text-sm text-[#8B8D97]">{description}</p>
-      </div>
+    <div className="w-full h-full">
+      <section className="bg-white">
+        <BreadcrumbHeader title={title} />
+        <div className="py-6 px-5 sm:px-6">
+          <p className="text-sm text-[#6B7280]">{description}</p>
+        </div>
+      </section>
     </div>
-  )
+  );
 }

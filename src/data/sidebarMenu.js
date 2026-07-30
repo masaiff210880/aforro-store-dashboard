@@ -18,7 +18,7 @@ const SIDEBAR_ITEMS = [
     {
         id: 'online-store',
         name: 'Online store',
-        icon: 'online-store',
+         icon: 'inventory',
         children: [
             { path: '/online-orders', name: 'Online Orders' },
             { path: '/settlement-payout', name: 'Settlement & payout' },
@@ -30,7 +30,7 @@ const SIDEBAR_ITEMS = [
     {
         id: 'offline-store',
         name: 'Offline store',
-        icon: 'offline-store',
+         icon: 'inventory',
         children: [
             { path: '/pos-billing', name: 'POS & Billing' },
             { path: '/transaction-history', name: 'Transaction History' },

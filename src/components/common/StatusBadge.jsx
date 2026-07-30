@@ -3,8 +3,8 @@ import { HiOutlineCube, HiOutlineShoppingBag } from 'react-icons/hi2';
 export default function StatusBadge({ status, type }) {
     const isPackaged = status === 'packaged' || (type && type.toLowerCase().includes('packaged'));
     const classes = isPackaged
-        ? 'bg-[#FFFAF0] text-[#C2410C] border border-[#FEE2C2]'
-        : 'bg-[#EFF6FF] text-[#1D4ED8] border border-[#DBEAFE]';
+        ? 'border border-[#E17100] text-[#E17100] bg-transparent'
+        : 'border border-[#615FFF] text-[#615FFF] bg-transparent';
 
     return (
         <span
@@ -19,3 +19,4 @@ export default function StatusBadge({ status, type }) {
         </span>
     );
 }
+

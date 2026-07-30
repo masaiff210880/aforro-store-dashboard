@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { HiOutlineArrowUpTray, HiOutlineXMark, HiOutlineTrash } from 'react-icons/hi2';
 import SelectDropdown from './SelectDropdown';
+import UnitSelectDropdown from './UnitSelectDropdown';
 import { useToast } from '../../context/ToastContext';
 
 const initialBatchOptions = [
@@ -28,7 +29,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
     const itemDropdownRef = useRef(null);
 
     // Loose item fields
-    const [numberOfSacks, setNumberOfSacks] = useState(1);
+    const [numberOfSacks, setNumberOfSacks] = useState(0);
     const [weightPerSack, setWeightPerSack] = useState('');
     const [weightPerSackUnit, setWeightPerSackUnit] = useState('Kg');
     const [totalWeight, setTotalWeight] = useState('');
@@ -99,7 +100,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
         setErrors({});
 
         // Reset states
-        setNumberOfSacks(1);
+        setNumberOfSacks(0);
         setWeightPerSack('');
         setWeightPerSackUnit('Kg');
         setTotalWeight('');
@@ -178,7 +179,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                 {
                     id: Date.now() + Math.random(),
                     batchNo: '',
-                    quantity: 999, // default number of sacks
+                    quantity: 0, // default number of sacks 0
                     weightPerSack: '',
                     weightPerSackUnit: 'Kg',
                     totalWeight: '--/unit',
@@ -217,7 +218,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
     const handleUpdateBatchQty = (index, delta) => {
         setBatches((prev) => {
             const updated = [...prev];
-            const nextQty = Math.min(999, Math.max(1, (parseInt(updated[index].quantity, 10) || 0) + delta));
+            const nextQty = Math.min(999, Math.max(0, (parseInt(updated[index].quantity, 10) || 0) + delta));
             updated[index] = { ...updated[index], quantity: nextQty };
             return updated;
         });
@@ -367,7 +368,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6">
-            <div className="w-full max-w-[1150px] rounded-[32px] bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.16)] overflow-y-auto max-h-[90vh]">
+            <div className="w-full max-w-[1150px] rounded-2xl bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.16)] overflow-y-auto max-h-[90vh]">
                 <div className="mb-6 flex items-center justify-between">
                     <div>
                         <h2 className="text-xl font-semibold text-[#111827]">Add new purchase</h2>
@@ -393,7 +394,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                             </div>
                             <div className="relative" ref={itemDropdownRef}>
                                 <div
-                                    className={`flex items-center gap-3 rounded-2xl border px-4 py-3 shadow-sm bg-white ${errors.itemQuery ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                    className={`flex items-center gap-3 rounded-lg border px-4 py-3 bg-white ${errors.itemQuery ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                         }`}
                                 >
                                     <input
@@ -415,7 +416,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                     <p className="mt-2 text-sm text-[#DC2626]">{errors.itemQuery}</p>
                                 )}
                                 {showItemOptions && (
-                                    <div className="absolute inset-x-0 top-full z-20 mt-2 rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
+                                    <div className="absolute inset-x-0 top-full z-20 mt-2 rounded-lg border border-[#E5E7EB] bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
                                         {filteredItemOptions.map((option) => (
                                             <button
                                                 key={option.sku}
@@ -453,7 +454,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                             </div>
                             <label
                                 htmlFor="purchase-file"
-                                className={`flex h-12 items-center gap-3 rounded-2xl border px-4 text-sm shadow-sm cursor-pointer ${errors.purchaseFile
+                                className={`flex h-12 items-center gap-3 rounded-lg border px-4 text-sm cursor-pointer ${errors.purchaseFile
                                         ? 'border-[#DC2626] bg-[#FEF2F2] text-[#991B1B]'
                                         : 'border-[#E5E7EB] bg-[#F8FAFF] text-[#6B7280]'
                                     }`}
@@ -492,10 +493,10 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                         <span className="text-[#DC2626]">*</span>
                                         <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
                                     </div>
-                                    <div className="flex h-11 items-center justify-between rounded-xl border border-[#E5E7EB] bg-white overflow-hidden shadow-sm max-w-[150px]">
+                                    <div className="flex h-11 items-center justify-between rounded-lg border border-[#E5E7EB] bg-white overflow-hidden max-w-[150px]">
                                         <button
                                             type="button"
-                                            onClick={() => setNumberOfSacks((prev) => Math.max(1, prev - 1))}
+                                            onClick={() => setNumberOfSacks((prev) => Math.max(0, prev - 1))}
                                             className="flex h-full w-12 items-center justify-center bg-[#F3F4F6] text-[#4B5563] font-bold border-r border-[#E5E7EB] transition hover:bg-[#E5E7EB] cursor-pointer"
                                         >
                                             —
@@ -505,7 +506,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                             value={numberOfSacks}
                                             onChange={(e) => {
                                                 const val = parseInt(e.target.value, 10);
-                                                setNumberOfSacks(isNaN(val) ? '' : Math.min(999, Math.max(1, val)));
+                                                setNumberOfSacks(isNaN(val) ? '' : Math.min(999, Math.max(0, val)));
                                             }}
                                             className="w-12 text-center text-sm font-semibold text-[#111827] outline-none border-none bg-transparent"
                                         />
@@ -529,7 +530,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                         <span className="text-[#DC2626]">*</span>
                                         <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
                                     </div>
-                                    <div className={`flex h-11 items-center rounded-2xl border bg-white shadow-sm pl-4 pr-2 gap-2 ${errors.weightPerSack ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                    <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors.weightPerSack ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                         }`}>
                                         <input
                                             type="text"
@@ -544,17 +545,10 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                             }}
                                             className="w-full border-none bg-transparent text-sm text-[#111827] outline-none placeholder-[#9CA3AF]"
                                         />
-                                        <select
+                                        <UnitSelectDropdown
                                             value={weightPerSackUnit}
-                                            onChange={(e) => setWeightPerSackUnit(e.target.value)}
-                                            className="h-7 rounded-lg border border-[#E5E7EB] bg-white px-2 text-xs font-semibold text-[#374151] outline-none cursor-pointer"
-                                        >
-                                            <option value="Add unit">Add unit</option>
-                                            <option value="Kg">Kg</option>
-                                            <option value="Gram">Gram</option>
-                                            <option value="Litre">Litre</option>
-                                            <option value="ml">ml</option>
-                                        </select>
+                                            onChange={(val) => setWeightPerSackUnit(val)}
+                                        />
                                     </div>
                                     {errors.weightPerSack && (
                                         <p className="text-sm text-[#DC2626]">{errors.weightPerSack}</p>
@@ -571,7 +565,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                         type="text"
                                         placeholder="Enter weight"
                                         value={totalWeight ? `${totalWeight} ${weightPerSackUnit}` : ''}
-                                        className="h-11 w-full rounded-xl border border-[#E5E7EB] px-4 text-sm text-[#111827] bg-[#F9FAFB] outline-none shadow-sm cursor-not-allowed"
+                                        className="h-11 w-full rounded-lg border border-[#E5E7EB] px-4 text-sm text-[#111827] bg-[#F9FAFB] outline-none cursor-not-allowed"
                                         disabled
                                     />
                                 </div>
@@ -631,7 +625,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                             return rest;
                                         });
                                     }}
-                                    className={`h-11 w-full rounded-xl border px-4 text-sm text-[#111827] outline-none shadow-sm ${errors.quantity ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                    className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] outline-none ${errors.quantity ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                         }`}
                                 />
                                 {errors.quantity && (
@@ -659,7 +653,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                         <div className="space-y-3">
                             {/* Header row */}
                             <div className={`grid ${isLooseItem
-                                    ? 'grid-cols-[0.9fr_1.2fr_2fr_1fr_2.4fr_auto]'
+                                    ? 'grid-cols-[1fr_1.25fr_1.9fr_1.35fr_2.1fr_auto]'
                                     : 'grid-cols-[1.5fr_1.5fr_2fr_2.2fr_auto]'
                                 } gap-3 text-xs font-semibold text-[#374151]`}>
                                 <div className="flex items-center gap-1">
@@ -709,7 +703,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                         </div>
                                     </>
                                 )}
-                                <div></div>
+                                <div className="w-[104px] shrink-0"></div>
                             </div>
 
                             {/* Batch rows */}
@@ -718,7 +712,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                     <div
                                         key={batch.id}
                                         className={`grid ${isLooseItem
-                                                ? 'grid-cols-[0.9fr_1.2fr_2fr_1fr_2.4fr_auto]'
+                                                ? 'grid-cols-[1fr_1.25fr_1.9fr_1.35fr_2.1fr_auto]'
                                                 : 'grid-cols-[1.5fr_1.5fr_2fr_2.2fr_auto]'
                                             } gap-3 items-start`}
                                     >
@@ -729,7 +723,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                                 placeholder="Batch No"
                                                 value={batch.batchNo}
                                                 onChange={(e) => handleUpdateBatchRow(index, 'batchNo', e.target.value)}
-                                                className={`h-11 w-full rounded-2xl border px-4 text-sm text-[#111827] bg-white outline-none shadow-sm ${errors[`batch_${index}_batchNo`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                                className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] bg-white outline-none ${errors[`batch_${index}_batchNo`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                                     }`}
                                             />
                                             {errors[`batch_${index}_batchNo`] && (
@@ -741,7 +735,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                             <>
                                                 {/* Number of sacks (Loose only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center justify-between rounded-2xl border bg-white overflow-hidden shadow-sm ${errors[`batch_${index}_quantity`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                                    <div className={`flex h-11 items-center justify-between rounded-lg border bg-white overflow-hidden ${errors[`batch_${index}_quantity`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                                         }`}>
                                                         <button
                                                             type="button"
@@ -764,7 +758,6 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                                             +
                                                         </button>
                                                     </div>
-                                                    <p className="text-[10px] text-[#9CA3AF] mt-0.5">Max 999</p>
                                                     {errors[`batch_${index}_quantity`] && (
                                                         <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_quantity`]}</p>
                                                     )}
@@ -772,7 +765,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
 
                                                 {/* Weight per carton/sack (Loose only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center rounded-2xl border bg-white shadow-sm pl-4 pr-2 gap-2 ${errors[`batch_${index}_weightPerSack`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                                    <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors[`batch_${index}_weightPerSack`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                                         }`}>
                                                         <input
                                                             type="text"
@@ -781,17 +774,10 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                                             onChange={(e) => handleUpdateBatchRow(index, 'weightPerSack', e.target.value)}
                                                             className="w-full border-none bg-transparent text-sm text-[#111827] outline-none placeholder-[#9CA3AF]"
                                                         />
-                                                        <select
+                                                        <UnitSelectDropdown
                                                             value={batch.weightPerSackUnit}
-                                                            onChange={(e) => handleUpdateBatchRow(index, 'weightPerSackUnit', e.target.value)}
-                                                            className="h-7 rounded-lg border border-[#E5E7EB] bg-white px-2 text-xs font-semibold text-[#374151] outline-none cursor-pointer"
-                                                        >
-                                                            <option value="Add unit">Add unit</option>
-                                                            <option value="Kg">Kg</option>
-                                                            <option value="Gram">Gram</option>
-                                                            <option value="Litre">Litre</option>
-                                                            <option value="ml">ml</option>
-                                                        </select>
+                                                            onChange={(val) => handleUpdateBatchRow(index, 'weightPerSackUnit', val)}
+                                                        />
                                                     </div>
                                                     {errors[`batch_${index}_weightPerSack`] && (
                                                         <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_weightPerSack`]}</p>
@@ -800,14 +786,14 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
 
                                                 {/* Total weight (disabled) */}
                                                 <div className="space-y-1">
-                                                    <div className="flex h-11 items-center rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB] px-4 text-sm text-[#374151] font-semibold shadow-sm cursor-not-allowed">
+                                                    <div className="flex h-11 items-center rounded-lg border border-[#E5E7EB] bg-[#F9FAFB] px-4 text-sm text-[#374151] font-semibold cursor-not-allowed">
                                                         {getBatchTotalWeight(batch)}
                                                     </div>
                                                 </div>
 
                                                 {/* Selling price/per unit (Loose only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center rounded-2xl border bg-white shadow-sm pl-4 pr-2 gap-2 ${errors[`batch_${index}_sellingPrice`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                                    <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors[`batch_${index}_sellingPrice`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                                         }`}>
                                                         <span className="text-sm text-[#9CA3AF] font-medium">$</span>
                                                         <input
@@ -817,17 +803,10 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                                             onChange={(e) => handleUpdateBatchRow(index, 'sellingPrice', e.target.value)}
                                                             className="w-full border-none bg-transparent text-sm text-[#111827] outline-none placeholder-[#9CA3AF]"
                                                         />
-                                                        <select
+                                                        <UnitSelectDropdown
                                                             value={batch.sellingPriceUnit}
-                                                            onChange={(e) => handleUpdateBatchRow(index, 'sellingPriceUnit', e.target.value)}
-                                                            className="h-7 rounded-lg border border-[#E5E7EB] bg-white px-2 text-xs font-semibold text-[#374151] outline-none cursor-pointer"
-                                                        >
-                                                            <option value="Add unit">Add unit</option>
-                                                            <option value="Kg">Kg</option>
-                                                            <option value="Gram">Gram</option>
-                                                            <option value="Litre">Litre</option>
-                                                            <option value="ml">ml</option>
-                                                        </select>
+                                                            onChange={(val) => handleUpdateBatchRow(index, 'sellingPriceUnit', val)}
+                                                        />
                                                     </div>
                                                     {errors[`batch_${index}_sellingPrice`] && (
                                                         <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_sellingPrice`]}</p>
@@ -843,7 +822,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                                         placeholder="Enter quantity"
                                                         value={batch.quantity}
                                                         onChange={(e) => handleUpdateBatchRow(index, 'quantity', e.target.value)}
-                                                        className={`h-11 w-full rounded-2xl border px-4 text-sm text-[#111827] bg-white outline-none shadow-sm ${errors[`batch_${index}_quantity`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                                        className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] bg-white outline-none ${errors[`batch_${index}_quantity`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                                             }`}
                                                     />
                                                     {errors[`batch_${index}_quantity`] && (
@@ -853,7 +832,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
 
                                                 {/* Offline selling price (Packaged only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center rounded-2xl border bg-white shadow-sm overflow-hidden ${errors[`batch_${index}_sellingPrice`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                                    <div className={`flex h-11 items-center rounded-lg border bg-white overflow-hidden ${errors[`batch_${index}_sellingPrice`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                                         }`}>
                                                         <span className="flex h-full w-10 items-center justify-center bg-[#F8FAFC] text-sm text-[#6B7280] font-medium border-r border-[#E5E7EB]">
                                                             ₹
@@ -873,7 +852,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
 
                                                 {/* Weight (Packaged only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center rounded-2xl border bg-white shadow-sm pl-4 pr-2 gap-2 ${errors[`batch_${index}_weight`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                                    <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors[`batch_${index}_weight`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                                         }`}>
                                                         <input
                                                             type="text"
@@ -882,17 +861,10 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                                             onChange={(e) => handleUpdateBatchRow(index, 'weight', e.target.value)}
                                                             className="w-full border-none bg-transparent text-sm text-[#111827] outline-none placeholder-[#9CA3AF]"
                                                         />
-                                                        <select
+                                                        <UnitSelectDropdown
                                                             value={batch.weightUnit}
-                                                            onChange={(e) => handleUpdateBatchRow(index, 'weightUnit', e.target.value)}
-                                                            className="h-7 rounded-lg border border-[#E5E7EB] bg-white px-2 text-xs font-semibold text-[#374151] outline-none cursor-pointer"
-                                                        >
-                                                            <option value="Add unit">Add unit</option>
-                                                            <option value="Kg">Kg</option>
-                                                            <option value="Gram">Gram</option>
-                                                            <option value="Litre">Litre</option>
-                                                            <option value="ml">ml</option>
-                                                        </select>
+                                                            onChange={(val) => handleUpdateBatchRow(index, 'weightUnit', val)}
+                                                        />
                                                     </div>
                                                     {errors[`batch_${index}_weight`] && (
                                                         <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_weight`]}</p>
@@ -906,7 +878,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                             <button
                                                 type="button"
                                                 onClick={() => handleDeleteBatchRow(index)}
-                                                className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#C80036] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#A0002B] cursor-pointer whitespace-nowrap"
+                                                className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#C80036] px-5 text-sm font-semibold text-white transition hover:bg-[#A0002B] cursor-pointer whitespace-nowrap"
                                             >
                                                 <HiOutlineTrash className="h-4 w-4" />
                                                 <span>Delete</span>
@@ -924,7 +896,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#2563EB] px-6 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1D4ED8] cursor-pointer"
+                        className="inline-flex h-12 items-center justify-center rounded-lg bg-[#2563EB] px-6 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] cursor-pointer"
                     >
                         Add purchase
                     </button>

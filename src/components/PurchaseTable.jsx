@@ -6,10 +6,10 @@ import StatusBadge from './common/StatusBadge';
 function ProductCell({ product }) {
     return (
         <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-[#374151]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-slate-100 text-[#374151]">
                 <BsFileText className="h-5 w-5" />
             </div>
-            <p className="text-sm font-semibold text-[#111827]">{product}</p>
+            <p className="text-sm text-[#111827]">{product}</p>
         </div>
     );
 }
@@ -20,7 +20,7 @@ export function PurchaseTable({ rows }) {
             <div className="overflow-x-auto">
                 <table className="min-w-[1100px] w-full border-collapse text-left text-sm">
                     <thead className="bg-[#F8FAFF]">
-                        <tr className="text-[10px] uppercase tracking-[0.14em] text-[#6B7280]">
+                        <tr className="text-xs font-semibold text-[#475569]">
                             <th className="whitespace-nowrap px-5 py-4 font-semibold">
                                 Date of purchase
                             </th>

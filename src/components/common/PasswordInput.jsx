@@ -30,7 +30,7 @@ export default function PasswordInput({
         onChange={onChange}
         readOnly={readOnly}
         placeholder={placeholder}
-        className={`w-full rounded-xl border px-4 py-2.5 pr-11 text-sm outline-none transition ${variant === 'light' ? 'focus:border-[#4880FF] focus:ring-2 focus:ring-[#4880FF]/20' : 'focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30'} ${VARIANT_STYLES[variant] || VARIANT_STYLES.dark} ${hasError ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20' : ''}`}
+        className={`w-full rounded-xl border px-4 py-2.5 pr-11 text-sm outline-none transition ${variant === 'light' ? 'focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20' : 'focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30'} ${VARIANT_STYLES[variant] || VARIANT_STYLES.dark} ${hasError ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20' : ''}`}
       />
       <button
         type="button"

@@ -171,7 +171,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6">
-            <div className="w-full max-w-[800px] rounded-[32px] bg-white p-6 sm:p-8 shadow-[0_28px_80px_rgba(15,23,42,0.16)] overflow-y-auto max-h-[90vh]">
+            <div className="w-full max-w-[800px] rounded-2xl bg-white p-6 sm:p-8 shadow-[0_28px_80px_rgba(15,23,42,0.16)] overflow-y-auto max-h-[90vh]">
                 {/* Header */}
                 <div className="mb-6 flex items-center justify-between">
                     <div>
@@ -199,7 +199,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
                             </div>
                             <div className="relative" ref={itemDropdownRef}>
                                 <div
-                                    className={`flex h-12 items-center gap-3 rounded-2xl border px-4 shadow-sm bg-white ${
+                                    className={`flex h-12 items-center gap-3 rounded-lg border px-4 bg-white ${
                                         errors.itemQuery ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                     }`}
                                 >
@@ -222,7 +222,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
                                     <p className="mt-1 text-xs text-[#DC2626]">{errors.itemQuery}</p>
                                 )}
                                 {showItemOptions && (
-                                    <div className="absolute inset-x-0 top-full z-20 mt-2 rounded-2xl border border-[#E5E7EB] bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
+                                    <div className="absolute inset-x-0 top-full z-20 mt-2 rounded-lg border border-[#E5E7EB] bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
                                         {filteredItemOptions.map((option) => (
                                             <button
                                                 key={option.sku}
@@ -267,7 +267,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
                                 type="text"
                                 value={availableQuantityDisplay}
                                 disabled
-                                className="h-12 w-full rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB] px-4 text-sm font-semibold text-[#111827] outline-none shadow-sm cursor-not-allowed"
+                                className="h-12 w-full rounded-lg border border-[#E5E7EB] bg-[#F9FAFB] px-4 text-sm font-semibold text-[#111827] outline-none cursor-not-allowed"
                             />
                         </div>
 
@@ -289,7 +289,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
                                         return rest;
                                     });
                                 }}
-                                className={`h-12 w-full rounded-2xl border px-4 text-sm text-[#111827] outline-none shadow-sm placeholder-[#9CA3AF] ${
+                                className={`h-12 w-full rounded-lg border px-4 text-sm text-[#111827] outline-none placeholder-[#9CA3AF] ${
                                     errors.adjustedQuantity ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                 }`}
                             />
@@ -343,7 +343,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
                                                     return rest;
                                                 });
                                             }}
-                                            className={`flex h-12 items-center gap-2.5 rounded-2xl border px-4 text-sm transition cursor-pointer ${
+                                            className={`flex h-12 items-center gap-2.5 rounded-lg border px-4 text-sm transition cursor-pointer ${
                                                 isSelected
                                                     ? 'border-[#2563EB] bg-[#F8FAFF] text-[#111827] font-medium'
                                                     : 'border-[#E5E7EB] bg-white text-[#374151] hover:border-[#D1D5DB]'
@@ -380,7 +380,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
                                                 return rest;
                                             });
                                         }}
-                                        className={`h-12 w-full rounded-2xl border px-5 text-sm text-[#111827] bg-[#F9FAFB] outline-none shadow-sm placeholder-[#9CA3AF] focus:bg-white focus:border-[#2563EB] ${
+                                        className={`h-12 w-full rounded-lg border px-5 text-sm text-[#111827] bg-[#F9FAFB] outline-none placeholder-[#9CA3AF] focus:bg-white focus:border-[#2563EB] ${
                                             errors.otherReason ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                         }`}
                                     />
@@ -398,7 +398,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#2563EB] px-8 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1D4ED8] cursor-pointer"
+                        className="inline-flex h-12 items-center justify-center rounded-lg bg-[#2563EB] px-8 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] cursor-pointer"
                     >
                         Add adjustment
                     </button>
