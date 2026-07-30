@@ -3,6 +3,7 @@ import { HiOutlineArrowUpTray, HiOutlineXMark, HiOutlineTrash } from 'react-icon
 import SelectDropdown from './SelectDropdown';
 import UnitSelectDropdown from './UnitSelectDropdown';
 import { useToast } from '../../context/ToastContext';
+import { formatBatchNumber } from '../../utils/formatters';
 
 const initialBatchOptions = [
     { value: 'batch1', label: 'Batch 1' },
@@ -312,7 +313,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
 
             let formattedPrice = '₹20,000';
             let formattedQty = quantity;
-            let batchLabel = selectedBatch;
+            let rawBatch = selectedBatch;
             let formattedWeight = '-';
 
             if (isLooseItem) {
@@ -320,15 +321,15 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                 formattedQty = `${numberOfSacks} sacks`;
                 if (batches.length > 0) {
                     const firstBatch = batches[0];
-                    batchLabel = firstBatch.batchNo;
-                    formattedPrice = `$${parseFloat(firstBatch.sellingPrice).toLocaleString('en-US')}/${firstBatch.sellingPriceUnit}`;
+                    rawBatch = firstBatch.batchNo || selectedBatch;
+                    formattedPrice = `₹${parseFloat(firstBatch.sellingPrice).toLocaleString('en-IN')}/${firstBatch.sellingPriceUnit}`;
                     formattedQty = `${batches.reduce((sum, b) => sum + (parseInt(b.quantity, 10) || 0), 0)} sacks`;
                     formattedWeight = getBatchTotalWeight(firstBatch);
                 }
             } else {
                 if (batches.length > 0) {
                     const firstBatch = batches[0];
-                    batchLabel = firstBatch.batchNo;
+                    rawBatch = firstBatch.batchNo || selectedBatch;
                     formattedPrice = `₹${parseFloat(firstBatch.sellingPrice).toLocaleString('en-IN')}`;
                     formattedQty = `${batches.reduce((sum, b) => sum + (parseInt(b.quantity, 10) || 0), 0)}`;
                     formattedWeight = `${firstBatch.weight}${firstBatch.weightUnit}`;
@@ -345,7 +346,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                 price: formattedPrice,
                 weight: formattedWeight,
                 quantity: formattedQty || '1',
-                batch: batchLabel || 'BT-1001',
+                batch: formatBatchNumber(rawBatch),
                 type: isLooseItem ? 'Loose Item' : 'Packaged Item',
                 status: isLooseItem ? 'loose' : 'packaged',
             };
@@ -795,7 +796,7 @@ export default function AddPurchaseModal({ open, onClose, selectedBatch, onBatch
                                                 <div className="space-y-1">
                                                     <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors[`batch_${index}_sellingPrice`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
                                                         }`}>
-                                                        <span className="text-sm text-[#9CA3AF] font-medium">$</span>
+                                                        <span className="text-sm text-[#9CA3AF] font-medium">₹</span>
                                                         <input
                                                             type="text"
                                                             placeholder="Placeholder text"

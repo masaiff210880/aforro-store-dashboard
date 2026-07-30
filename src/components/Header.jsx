@@ -106,10 +106,12 @@ export default function Header({ onMenuToggle }) {
                         <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-[#EF4444]" />
                     </button>
 
-                    <div className="flex min-w-[200px] items-center gap-3 rounded-full border border-[#F3F4F6] bg-[#F8FAFF] px-3 py-1.5">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2563EB] text-sm font-semibold text-white">
-                            J
-                        </div>
+                    <div className="flex items-center gap-3">
+                        <img
+                            className="h-9 w-9 rounded-full object-cover"
+                            src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                            alt="Jese Leos avatar"
+                        />
                         <div className="min-w-0">
                             <p className="truncate text-xs font-semibold text-[#111827]">
                                 Jese Leos
@@ -138,10 +140,12 @@ export default function Header({ onMenuToggle }) {
                             </div>
 
                             {/* User Info Card */}
-                            <div className="my-5 flex items-center gap-3 rounded-xl bg-[#F8FAFF] p-3 border border-[#E5E7EB]">
-                                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2563EB] text-base font-bold text-white shadow-sm">
-                                    J
-                                </div>
+                            <div className="my-5 flex items-center gap-3">
+                                <img
+                                    className="h-11 w-11 rounded-full object-cover shadow-sm"
+                                    src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                                    alt="Jese Leos avatar"
+                                />
                                 <div className="min-w-0">
                                     <p className="truncate text-sm font-bold text-[#111827]">Jese Leos</p>
                                     <p className="truncate text-xs text-[#6B7280]">name@flowbite.com</p>

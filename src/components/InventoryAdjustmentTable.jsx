@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { BsFileText } from 'react-icons/bs';
-import { HiArrowDown, HiArrowUp, HiChevronUpDown, HiChevronUp, HiChevronDown } from 'react-icons/hi2';
+import { HiArrowDown, HiArrowUp, HiChevronUpDown, HiChevronUp, HiChevronDown, HiChevronRight } from 'react-icons/hi2';
 import StatusBadge from './common/StatusBadge';
 
 function ProductCell({ product }) {
@@ -98,7 +98,10 @@ export function InventoryAdjustmentTable({ rows }) {
                                             {row.barcode}
                                         </td>
                                         <td className="whitespace-nowrap px-5 py-4 text-[#374151]">
-                                            {row.batch}
+                                            <div className="inline-flex items-center gap-2 font-medium">
+                                                <span>{row.batch}</span>
+                                                <HiChevronRight className="h-4 w-4 text-[#4A5565]" />
+                                            </div>
                                         </td>
                                         <td className="whitespace-nowrap px-5 py-4 text-sm text-[#374151]">
                                             {row.channel || 'Offline'}

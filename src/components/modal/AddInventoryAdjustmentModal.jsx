@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { HiOutlineXMark } from 'react-icons/hi2';
 import SelectDropdown from './SelectDropdown';
 import { useToast } from '../../context/ToastContext';
+import { formatBatchNumber } from '../../utils/formatters';
 
 const batchOptions = [
     { value: 'Batch 1', label: 'Batch 1' },
@@ -142,7 +143,7 @@ export default function AddInventoryAdjustmentModal({ open, onClose, onAddAdjust
                 date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
                 product: name,
                 barcode: sku,
-                batch: selectedBatch,
+                batch: formatBatchNumber(selectedBatch),
                 channel: 'Offline',
                 qty: formattedQty,
                 adjustmentQty: formattedQty,
