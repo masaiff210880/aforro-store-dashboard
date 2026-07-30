@@ -19,6 +19,7 @@ html {
   text-rendering: optimizeLegibility;
   scrollbar-width: thin;
   scrollbar-color: rgba(139, 141, 151, 0.5) rgba(245, 246, 250, 0.8);
+  zoom: 90%;
 }
 
 html::-webkit-scrollbar {

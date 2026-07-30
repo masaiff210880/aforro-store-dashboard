@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router';
 import { BsFileText } from 'react-icons/bs';
 import { HiArrowDown, HiArrowUp, HiChevronUpDown, HiChevronUp, HiChevronDown, HiChevronRight, HiEllipsisVertical, HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi2';
 import StatusBadge from './common/StatusBadge';
@@ -36,7 +37,10 @@ function ActionMenu({ row, onEdit, onDelete }) {
         <div className="relative inline-block text-left" ref={menuRef}>
             <button
                 type="button"
-                onClick={() => setIsOpen((prev) => !prev)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setIsOpen((prev) => !prev);
+                }}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#E5E7EB] bg-white text-[#475569] transition hover:bg-[#F8FAFF] hover:text-[#111827] cursor-pointer"
                 title="Actions"
             >
@@ -47,7 +51,8 @@ function ActionMenu({ row, onEdit, onDelete }) {
                 <div className="absolute right-0 z-30 mt-1 w-36 origin-top-right rounded-xl border border-[#E5E7EB] bg-white py-1 shadow-lg ring-1 ring-black/5 animate-fadeIn">
                     <button
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.stopPropagation();
                             setIsOpen(false);
                             onEdit(row);
                         }}
@@ -58,7 +63,8 @@ function ActionMenu({ row, onEdit, onDelete }) {
                     </button>
                     <button
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.stopPropagation();
                             setIsOpen(false);
                             onDelete(row);
                         }}
@@ -73,7 +79,8 @@ function ActionMenu({ row, onEdit, onDelete }) {
     );
 }
 
-export function InventoryAdjustmentTable({ rows, onEdit, onDelete }) {
+export function InventoryAdjustmentTable({ rows, onEdit, onDelete, onRowClick }) {
+    const navigate = useNavigate();
     const [sortOrder, setSortOrder] = useState('none');
 
     const handleSortDate = () => {
@@ -88,6 +95,16 @@ export function InventoryAdjustmentTable({ rows, onEdit, onDelete }) {
             return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
         });
     }, [rows, sortOrder]);
+
+    const handleRowClick = (row) => {
+        if (onRowClick) {
+            onRowClick(row);
+        } else {
+            navigate(`/inventory/inventory-adjustment/${row.id}`, {
+                state: { adjustment: row },
+            });
+        }
+    };
 
     return (
         <div className="overflow-hidden border-b border-[#E5E7EB] bg-white shadow-sm">
@@ -149,7 +166,11 @@ export function InventoryAdjustmentTable({ rows, onEdit, onDelete }) {
                                 const badgeStatus = row.status || (row.type === 'Loose Item' ? 'loose' : 'packaged');
 
                                 return (
-                                    <tr key={row.id} className="border-t border-[#E5E7EB] last:border-b-0 transition hover:bg-[#F9FAFB]">
+                                    <tr
+                                        key={row.id}
+                                        onClick={() => handleRowClick(row)}
+                                        className="border-t border-[#E5E7EB] last:border-b-0 transition hover:bg-[#F9FAFB] cursor-pointer"
+                                    >
                                         <td className="whitespace-nowrap px-5 py-4 text-sm text-[#6B7280]">
                                             {row.date}
                                         </td>

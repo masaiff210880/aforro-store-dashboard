@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { HiOutlineArrowUpTray, HiOutlineXMark, HiOutlineTrash } from 'react-icons/hi2';
-import SelectDropdown from './SelectDropdown';
-import UnitSelectDropdown from './UnitSelectDropdown';
+import { HiOutlineArrowUpTray, HiOutlineTrash, HiOutlineXMark } from 'react-icons/hi2';
 import { useToast } from '../../context/ToastContext';
 import { formatBatchNumber } from '../../utils/formatters';
+import SelectDropdown from './SelectDropdown';
+import UnitSelectDropdown from './UnitSelectDropdown';
 
 const initialBatchOptions = [
     { value: 'batch1', label: 'Batch 1' },
@@ -17,7 +17,14 @@ const itemOptions = [
     { label: 'Organic Sugar', sku: '3456789012', type: 'packaged' },
 ];
 
-export default function EditPurchaseModal({ open, onClose, initialData, selectedBatch: externalSelectedBatch, onBatchChange, onUpdatePurchase }) {
+export default function EditPurchaseModal({
+    open,
+    onClose,
+    initialData,
+    selectedBatch: externalSelectedBatch,
+    onBatchChange,
+    onUpdatePurchase,
+}) {
     const [itemQuery, setItemQuery] = useState('');
     const [selectedItem, setSelectedItem] = useState(null);
     const [itemMode, setItemMode] = useState('search');
@@ -43,17 +50,22 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
 
     const isLooseItem = selectedItem
         ? selectedItem.type === 'loose'
-        : (itemQuery.toLowerCase().includes('rice') || itemQuery.toLowerCase().includes('loose') || (initialData && (initialData.type === 'Loose Item' || initialData.status === 'loose')));
+        : itemQuery.toLowerCase().includes('rice') ||
+          itemQuery.toLowerCase().includes('loose') ||
+          (initialData && (initialData.type === 'Loose Item' || initialData.status === 'loose'));
 
     // Autofill form fields whenever modal opens or initialData changes
     useEffect(() => {
         if (!open || !initialData) return;
 
-        const isLoose = initialData.type === 'Loose Item' || initialData.status === 'loose' || String(initialData.product).toLowerCase().includes('rice');
+        const isLoose =
+            initialData.type === 'Loose Item' ||
+            initialData.status === 'loose' ||
+            String(initialData.product).toLowerCase().includes('rice');
         const itemObj = {
             label: initialData.product || '',
             sku: initialData.barcode || '1234567890',
-            type: isLoose ? 'loose' : 'packaged'
+            type: isLoose ? 'loose' : 'packaged',
         };
 
         setSelectedItem(itemObj);
@@ -63,7 +75,15 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
         const rawPriceNum = String(initialData.price || '').replace(/[^0-9.]/g, '') || '20000';
         const rawQtyNum = String(initialData.quantity || '').replace(/[^0-9]/g, '') || '10';
         const rawWeightNum = String(initialData.weight || '').replace(/[^0-9.]/g, '') || '25';
-        const weightUnit = String(initialData.weight || '').toLowerCase().includes('g') && !String(initialData.weight || '').toLowerCase().includes('kg') ? 'g' : 'Kg';
+        const weightUnit =
+            String(initialData.weight || '')
+                .toLowerCase()
+                .includes('g') &&
+            !String(initialData.weight || '')
+                .toLowerCase()
+                .includes('kg')
+                ? 'g'
+                : 'Kg';
 
         setQuantity(rawQtyNum);
         setFileName(initialData.fileName || 'purchase_invoice.pdf');
@@ -78,33 +98,41 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
             setWeightPerSackUnit('Kg');
             setTotalWeight((sacks * parseFloat(wPerSack)).toString());
 
-            setBatches([
-                {
-                    id: Date.now(),
-                    batchNo: initialData.batch || 'BT-1001',
-                    quantity: sacks,
-                    weightPerSack: wPerSack,
-                    weightPerSackUnit: 'Kg',
-                    totalWeight: `${sacks * parseFloat(wPerSack)} Kg`,
-                    sellingPrice: rawPriceNum,
-                    sellingPriceUnit: 'Kg'
-                }
-            ]);
+            setBatches(
+                Array.isArray(initialData.batches) && initialData.batches.length > 0
+                    ? initialData.batches
+                    : [
+                          {
+                              id: Date.now(),
+                              batchNo: initialData.batch || 'BT-1001',
+                              quantity: sacks,
+                              weightPerSack: wPerSack,
+                              weightPerSackUnit: 'Kg',
+                              totalWeight: `${sacks * parseFloat(wPerSack)} Kg`,
+                              sellingPrice: rawPriceNum,
+                              sellingPriceUnit: 'Kg',
+                          },
+                      ],
+            );
         } else {
             setNumberOfSacks(0);
             setWeightPerSack('');
             setTotalWeight('');
 
-            setBatches([
-                {
-                    id: Date.now(),
-                    batchNo: initialData.batch || 'BT-1002',
-                    quantity: rawQtyNum,
-                    sellingPrice: rawPriceNum,
-                    weight: rawWeightNum || '100',
-                    weightUnit: weightUnit
-                }
-            ]);
+            setBatches(
+                Array.isArray(initialData.batches) && initialData.batches.length > 0
+                    ? initialData.batches
+                    : [
+                          {
+                              id: Date.now(),
+                              batchNo: initialData.batch || 'BT-1002',
+                              quantity: rawQtyNum,
+                              sellingPrice: rawPriceNum,
+                              weight: rawWeightNum || '100',
+                              weightUnit: weightUnit,
+                          },
+                      ],
+            );
         }
     }, [open, initialData, externalSelectedBatch]);
 
@@ -175,9 +203,7 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
 
     const canCreateNewItem = itemQuery.trim().length > 0 && !hasMatchingItem;
 
-    const inputValue = selectedItem
-        ? selectedItem.label
-        : itemQuery;
+    const inputValue = selectedItem ? selectedItem.label : itemQuery;
 
     const handleItemInput = (value) => {
         setItemQuery(value);
@@ -200,12 +226,13 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
     const handleCreateNewItem = () => {
         const query = itemQuery.trim();
         const generatedSku = 'SKU-' + Math.floor(100000 + Math.random() * 900000);
-        const isLoose = query.toLowerCase().includes('rice') || query.toLowerCase().includes('loose');
+        const isLoose =
+            query.toLowerCase().includes('rice') || query.toLowerCase().includes('loose');
 
         const newItem = {
             label: query,
             sku: generatedSku,
-            type: isLoose ? 'loose' : 'packaged'
+            type: isLoose ? 'loose' : 'packaged',
         };
 
         setSelectedItem(newItem);
@@ -264,7 +291,10 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
     const handleUpdateBatchQty = (index, delta) => {
         setBatches((prev) => {
             const updated = [...prev];
-            const nextQty = Math.min(999, Math.max(0, (parseInt(updated[index].quantity, 10) || 0) + delta));
+            const nextQty = Math.min(
+                999,
+                Math.max(0, (parseInt(updated[index].quantity, 10) || 0) + delta),
+            );
             updated[index] = { ...updated[index], quantity: nextQty };
             return updated;
         });
@@ -274,7 +304,10 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
         const parsed = parseInt(value, 10);
         setBatches((prev) => {
             const updated = [...prev];
-            updated[index] = { ...updated[index], quantity: isNaN(parsed) ? '' : Math.min(999, Math.max(0, parsed)) };
+            updated[index] = {
+                ...updated[index],
+                quantity: isNaN(parsed) ? '' : Math.min(999, Math.max(0, parsed)),
+            };
             return updated;
         });
     };
@@ -304,10 +337,19 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
         }
 
         if (isLooseItem) {
-            if (!numberOfSacks || isNaN(parseInt(numberOfSacks, 10)) || parseInt(numberOfSacks, 10) <= 0 || parseInt(numberOfSacks, 10) > 999) {
+            if (
+                !numberOfSacks ||
+                isNaN(parseInt(numberOfSacks, 10)) ||
+                parseInt(numberOfSacks, 10) <= 0 ||
+                parseInt(numberOfSacks, 10) > 999
+            ) {
                 nextErrors.numberOfSacks = 'Number of sacks must be between 1 and 999.';
             }
-            if (!weightPerSack || isNaN(parseFloat(weightPerSack)) || parseFloat(weightPerSack) <= 0) {
+            if (
+                !weightPerSack ||
+                isNaN(parseFloat(weightPerSack)) ||
+                parseFloat(weightPerSack) <= 0
+            ) {
                 nextErrors.weightPerSack = 'Weight per carton/sack must be a positive number.';
             }
         } else {
@@ -315,7 +357,11 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                 if (!selectedBatch) {
                     nextErrors.selectedBatch = 'Select a batch.';
                 }
-                if (!quantity.trim() || isNaN(parseInt(quantity, 10)) || parseInt(quantity, 10) <= 0) {
+                if (
+                    !quantity.trim() ||
+                    isNaN(parseInt(quantity, 10)) ||
+                    parseInt(quantity, 10) <= 0
+                ) {
                     nextErrors.quantity = 'Quantity must be a positive integer.';
                 }
             }
@@ -327,23 +373,53 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                     nextErrors[`batch_${index}_batchNo`] = 'Batch number is required.';
                 }
                 if (isLooseItem) {
-                    if (!batch.quantity || isNaN(parseInt(batch.quantity, 10)) || parseInt(batch.quantity, 10) <= 0 || parseInt(batch.quantity, 10) > 999) {
-                        nextErrors[`batch_${index}_quantity`] = 'Number of sacks must be between 1 and 999.';
+                    if (
+                        !batch.quantity ||
+                        isNaN(parseInt(batch.quantity, 10)) ||
+                        parseInt(batch.quantity, 10) <= 0 ||
+                        parseInt(batch.quantity, 10) > 999
+                    ) {
+                        nextErrors[`batch_${index}_quantity`] =
+                            'Number of sacks must be between 1 and 999.';
                     }
-                    if (!batch.weightPerSack || isNaN(parseFloat(batch.weightPerSack)) || parseFloat(batch.weightPerSack) <= 0) {
-                        nextErrors[`batch_${index}_weightPerSack`] = 'Weight per carton/sack must be a positive number.';
+                    if (
+                        !batch.weightPerSack ||
+                        isNaN(parseFloat(batch.weightPerSack)) ||
+                        parseFloat(batch.weightPerSack) <= 0
+                    ) {
+                        nextErrors[`batch_${index}_weightPerSack`] =
+                            'Weight per carton/sack must be a positive number.';
                     }
-                    if (!batch.sellingPrice || isNaN(parseFloat(batch.sellingPrice)) || parseFloat(batch.sellingPrice) <= 0) {
-                        nextErrors[`batch_${index}_sellingPrice`] = 'Selling price must be a positive number.';
+                    if (
+                        !batch.sellingPrice ||
+                        isNaN(parseFloat(batch.sellingPrice)) ||
+                        parseFloat(batch.sellingPrice) <= 0
+                    ) {
+                        nextErrors[`batch_${index}_sellingPrice`] =
+                            'Selling price must be a positive number.';
                     }
                 } else {
-                    if (!batch.quantity || isNaN(parseInt(batch.quantity, 10)) || parseInt(batch.quantity, 10) <= 0) {
-                        nextErrors[`batch_${index}_quantity`] = 'Available quantity must be a positive integer.';
+                    if (
+                        !batch.quantity ||
+                        isNaN(parseInt(batch.quantity, 10)) ||
+                        parseInt(batch.quantity, 10) <= 0
+                    ) {
+                        nextErrors[`batch_${index}_quantity`] =
+                            'Available quantity must be a positive integer.';
                     }
-                    if (!batch.sellingPrice || isNaN(parseFloat(batch.sellingPrice)) || parseFloat(batch.sellingPrice) <= 0) {
-                        nextErrors[`batch_${index}_sellingPrice`] = 'Selling price must be a positive number.';
+                    if (
+                        !batch.sellingPrice ||
+                        isNaN(parseFloat(batch.sellingPrice)) ||
+                        parseFloat(batch.sellingPrice) <= 0
+                    ) {
+                        nextErrors[`batch_${index}_sellingPrice`] =
+                            'Selling price must be a positive number.';
                     }
-                    if (!batch.weight || isNaN(parseFloat(batch.weight)) || parseFloat(batch.weight) <= 0) {
+                    if (
+                        !batch.weight ||
+                        isNaN(parseFloat(batch.weight)) ||
+                        parseFloat(batch.weight) <= 0
+                    ) {
                         nextErrors[`batch_${index}_weight`] = 'Weight must be a positive number.';
                     }
                 }
@@ -354,7 +430,11 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
 
         if (Object.keys(nextErrors).length === 0) {
             const name = selectedItem ? selectedItem.label : itemQuery;
-            const sku = selectedItem ? selectedItem.sku : (initialData ? initialData.barcode : 'SKU-' + Math.floor(100000 + Math.random() * 900000));
+            const sku = selectedItem
+                ? selectedItem.sku
+                : initialData
+                  ? initialData.barcode
+                  : 'SKU-' + Math.floor(100000 + Math.random() * 900000);
 
             let formattedPrice = '₹20,000';
             let formattedQty = quantity;
@@ -383,6 +463,12 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                 }
             }
 
+            const batchSummary = batches.length
+                ? batches
+                      .map((batch) => formatBatchNumber(batch.batchNo || selectedBatch))
+                      .join(', ')
+                : formatBatchNumber(rawBatch);
+
             const updatedPurchase = {
                 ...initialData,
                 product: name,
@@ -390,11 +476,12 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                 price: formattedPrice,
                 weight: formattedWeight,
                 quantity: formattedQty || '1',
-                batch: formatBatchNumber(rawBatch),
+                batch: batchSummary,
                 type: isLooseItem ? 'Loose Item' : 'Packaged Item',
                 status: isLooseItem ? 'loose' : 'packaged',
                 purchaseOrder,
                 fileName,
+                batches,
             };
 
             if (onUpdatePurchase) {
@@ -404,7 +491,7 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
             showToast({
                 type: 'success',
                 message: 'Purchase order updated successfully',
-                duration: 4000
+                duration: 4000,
             });
 
             onClose();
@@ -418,7 +505,9 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
             <div className="w-full max-w-[1150px] rounded-2xl bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.16)] overflow-y-auto max-h-[90vh]">
                 <div className="mb-6 flex items-center justify-between">
                     <div>
-                        <h2 className="text-xl font-semibold text-[#111827]">Edit purchase order</h2>
+                        <h2 className="text-xl font-semibold text-[#111827]">
+                            Edit purchase order
+                        </h2>
                     </div>
                     <button
                         type="button"
@@ -437,12 +526,15 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                             <div className="flex items-center gap-1.5 text-sm font-medium text-[#111827]">
                                 <label>Item name/SKU number</label>
                                 <span className="text-[#DC2626]">*</span>
-                                <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                    ?
+                                </span>
                             </div>
                             <div className="relative" ref={itemDropdownRef}>
                                 <div
-                                    className={`flex items-center gap-3 rounded-lg border px-4 py-3 bg-white ${errors.itemQuery ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                        }`}
+                                    className={`flex items-center gap-3 rounded-lg border px-4 py-3 bg-white ${
+                                        errors.itemQuery ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                    }`}
                                 >
                                     <input
                                         type="text"
@@ -460,7 +552,9 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                     </button>
                                 </div>
                                 {errors.itemQuery && (
-                                    <p className="mt-2 text-sm text-[#DC2626]">{errors.itemQuery}</p>
+                                    <p className="mt-2 text-sm text-[#DC2626]">
+                                        {errors.itemQuery}
+                                    </p>
                                 )}
                                 {showItemOptions && (
                                     <div className="absolute inset-x-0 top-full z-20 mt-2 rounded-lg border border-[#E5E7EB] bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
@@ -501,10 +595,11 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                             </div>
                             <label
                                 htmlFor="edit-purchase-file"
-                                className={`flex h-12 items-center gap-3 rounded-lg border px-4 text-sm cursor-pointer ${errors.purchaseFile
+                                className={`flex h-12 items-center gap-3 rounded-lg border px-4 text-sm cursor-pointer ${
+                                    errors.purchaseFile
                                         ? 'border-[#DC2626] bg-[#FEF2F2] text-[#991B1B]'
                                         : 'border-[#E5E7EB] bg-[#F8FAFF] text-[#6B7280]'
-                                    }`}
+                                }`}
                             >
                                 <HiOutlineArrowUpTray className="h-5 w-5 text-[#374151]" />
                                 <span>{fileName}</span>
@@ -538,12 +633,16 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                     <div className="flex items-center gap-1.5 text-sm font-medium text-[#111827]">
                                         <label>Number of sacks</label>
                                         <span className="text-[#DC2626]">*</span>
-                                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                            ?
+                                        </span>
                                     </div>
                                     <div className="flex h-11 items-center justify-between rounded-lg border border-[#E5E7EB] bg-white overflow-hidden max-w-[150px]">
                                         <button
                                             type="button"
-                                            onClick={() => setNumberOfSacks((prev) => Math.max(0, prev - 1))}
+                                            onClick={() =>
+                                                setNumberOfSacks((prev) => Math.max(0, prev - 1))
+                                            }
                                             className="flex h-full w-12 items-center justify-center bg-[#F3F4F6] text-[#4B5563] font-bold border-r border-[#E5E7EB] transition hover:bg-[#E5E7EB] cursor-pointer"
                                         >
                                             —
@@ -553,13 +652,19 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                             value={numberOfSacks}
                                             onChange={(e) => {
                                                 const val = parseInt(e.target.value, 10);
-                                                setNumberOfSacks(isNaN(val) ? '' : Math.min(999, Math.max(0, val)));
+                                                setNumberOfSacks(
+                                                    isNaN(val)
+                                                        ? ''
+                                                        : Math.min(999, Math.max(0, val)),
+                                                );
                                             }}
                                             className="w-12 text-center text-sm font-semibold text-[#111827] outline-none border-none bg-transparent"
                                         />
                                         <button
                                             type="button"
-                                            onClick={() => setNumberOfSacks((prev) => Math.min(999, prev + 1))}
+                                            onClick={() =>
+                                                setNumberOfSacks((prev) => Math.min(999, prev + 1))
+                                            }
                                             className="flex h-full w-12 items-center justify-center bg-[#F3F4F6] text-[#2563EB] font-bold border-l border-[#E5E7EB] transition hover:bg-[#E5E7EB] cursor-pointer"
                                         >
                                             +
@@ -567,7 +672,9 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                     </div>
                                     <p className="text-[10px] text-[#9CA3AF] mt-0.5">Max 999</p>
                                     {errors.numberOfSacks && (
-                                        <p className="text-sm text-[#DC2626]">{errors.numberOfSacks}</p>
+                                        <p className="text-sm text-[#DC2626]">
+                                            {errors.numberOfSacks}
+                                        </p>
                                     )}
                                 </div>
 
@@ -575,17 +682,24 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                     <div className="flex items-center gap-1.5 text-sm font-medium text-[#111827]">
                                         <label>Weight per carton/sack</label>
                                         <span className="text-[#DC2626]">*</span>
-                                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                            ?
+                                        </span>
                                     </div>
-                                    <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors.weightPerSack ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                        }`}>
+                                    <div
+                                        className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${
+                                            errors.weightPerSack
+                                                ? 'border-[#DC2626]'
+                                                : 'border-[#E5E7EB]'
+                                        }`}
+                                    >
                                         <input
                                             type="text"
                                             placeholder="Enter weight"
                                             value={weightPerSack}
                                             onChange={(e) => {
                                                 setWeightPerSack(e.target.value);
-                                                setErrors(prev => {
+                                                setErrors((prev) => {
                                                     const { weightPerSack, ...rest } = prev;
                                                     return rest;
                                                 });
@@ -598,7 +712,9 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                         />
                                     </div>
                                     {errors.weightPerSack && (
-                                        <p className="text-sm text-[#DC2626]">{errors.weightPerSack}</p>
+                                        <p className="text-sm text-[#DC2626]">
+                                            {errors.weightPerSack}
+                                        </p>
                                     )}
                                 </div>
 
@@ -606,12 +722,16 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                     <div className="flex items-center gap-1.5 text-sm font-medium text-[#111827]">
                                         <label>Total weight</label>
                                         <span className="text-[#DC2626]">*</span>
-                                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                            ?
+                                        </span>
                                     </div>
                                     <input
                                         type="text"
                                         placeholder="Enter weight"
-                                        value={totalWeight ? `${totalWeight} ${weightPerSackUnit}` : ''}
+                                        value={
+                                            totalWeight ? `${totalWeight} ${weightPerSackUnit}` : ''
+                                        }
                                         className="h-11 w-full rounded-lg border border-[#E5E7EB] px-4 text-sm text-[#111827] bg-[#F9FAFB] outline-none cursor-not-allowed"
                                         disabled
                                     />
@@ -622,7 +742,9 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-1.5 text-sm font-medium text-[#111827]">
                                         <label>Select Batch</label>
-                                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                        <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                            ?
+                                        </span>
                                     </div>
                                     <SelectDropdown
                                         value={selectedBatch}
@@ -642,7 +764,9 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                 <div className="flex items-center gap-1.5 text-sm font-medium text-[#111827]">
                                     <label>Select Batch</label>
                                     <span className="text-[#DC2626]">*</span>
-                                    <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                    <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                        ?
+                                    </span>
                                 </div>
                                 <SelectDropdown
                                     value={selectedBatch}
@@ -659,7 +783,9 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                 <div className="flex items-center gap-1.5 text-sm font-medium text-[#111827]">
                                     <label>Incoming quantity</label>
                                     <span className="text-[#DC2626]">*</span>
-                                    <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                    <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                        ?
+                                    </span>
                                 </div>
                                 <input
                                     type="text"
@@ -672,8 +798,9 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                             return rest;
                                         });
                                     }}
-                                    className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] outline-none ${errors.quantity ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                        }`}
+                                    className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] outline-none ${
+                                        errors.quantity ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
+                                    }`}
                                 />
                                 {errors.quantity && (
                                     <p className="text-sm text-[#DC2626]">{errors.quantity}</p>
@@ -699,36 +826,49 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                     <div className="mt-5 border-t border-[#E5E7EB] pt-5">
                         <div className="space-y-3">
                             {/* Header row */}
-                            <div className={`grid ${isLooseItem
-                                    ? 'grid-cols-[1fr_1.25fr_1.9fr_1.35fr_2.1fr_auto]'
-                                    : 'grid-cols-[1.5fr_1.5fr_2fr_2.2fr_auto]'
-                                } gap-3 text-xs font-semibold text-[#374151]`}>
+                            <div
+                                className={`grid ${
+                                    isLooseItem
+                                        ? 'grid-cols-[1fr_1.25fr_1.9fr_1.35fr_2.1fr_auto]'
+                                        : 'grid-cols-[1.5fr_1.5fr_2fr_2.2fr_auto]'
+                                } gap-3 text-xs font-semibold text-[#374151]`}
+                            >
                                 <div className="flex items-center gap-1">
                                     <span>Batch no.</span>
                                     <span className="text-[#DC2626]">*</span>
-                                    <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                    <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                        ?
+                                    </span>
                                 </div>
                                 {isLooseItem ? (
                                     <>
                                         <div className="flex items-center gap-1">
                                             <span>Number of sacks</span>
                                             <span className="text-[#DC2626]">*</span>
-                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                                ?
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <span>Weight per carton/sack</span>
                                             <span className="text-[#DC2626]">*</span>
-                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                                ?
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <span>Total weight</span>
                                             <span className="text-[#DC2626]">*</span>
-                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                                ?
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <span>Selling price/per unit</span>
                                             <span className="text-[#DC2626]">*</span>
-                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                                ?
+                                            </span>
                                         </div>
                                     </>
                                 ) : (
@@ -736,17 +876,23 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                         <div className="flex items-center gap-1">
                                             <span>Available quantity</span>
                                             <span className="text-[#DC2626]">*</span>
-                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                                ?
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <span>Offline selling price</span>
                                             <span className="text-[#DC2626]">*</span>
-                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                                ?
+                                            </span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <span>Weight</span>
                                             <span className="text-[#DC2626]">*</span>
-                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">?</span>
+                                            <span className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-100 text-[9px] text-[#6B7280] border border-[#D1D5DB] cursor-help">
+                                                ?
+                                            </span>
                                         </div>
                                     </>
                                 )}
@@ -758,10 +904,11 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                 {batches.map((batch, index) => (
                                     <div
                                         key={batch.id}
-                                        className={`grid ${isLooseItem
+                                        className={`grid ${
+                                            isLooseItem
                                                 ? 'grid-cols-[1fr_1.25fr_1.9fr_1.35fr_2.1fr_auto]'
                                                 : 'grid-cols-[1.5fr_1.5fr_2fr_2.2fr_auto]'
-                                            } gap-3 items-start`}
+                                        } gap-3 items-start`}
                                     >
                                         {/* Batch no. */}
                                         <div className="space-y-1">
@@ -769,12 +916,23 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                                 type="text"
                                                 placeholder="Batch No"
                                                 value={batch.batchNo}
-                                                onChange={(e) => handleUpdateBatchRow(index, 'batchNo', e.target.value)}
-                                                className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] bg-white outline-none ${errors[`batch_${index}_batchNo`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                                    }`}
+                                                onChange={(e) =>
+                                                    handleUpdateBatchRow(
+                                                        index,
+                                                        'batchNo',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] bg-white outline-none ${
+                                                    errors[`batch_${index}_batchNo`]
+                                                        ? 'border-[#DC2626]'
+                                                        : 'border-[#E5E7EB]'
+                                                }`}
                                             />
                                             {errors[`batch_${index}_batchNo`] && (
-                                                <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_batchNo`]}</p>
+                                                <p className="text-xs text-[#DC2626]">
+                                                    {errors[`batch_${index}_batchNo`]}
+                                                </p>
                                             )}
                                         </div>
 
@@ -782,11 +940,18 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                             <>
                                                 {/* Number of sacks (Loose only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center justify-between rounded-lg border bg-white overflow-hidden ${errors[`batch_${index}_quantity`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                                        }`}>
+                                                    <div
+                                                        className={`flex h-11 items-center justify-between rounded-lg border bg-white overflow-hidden ${
+                                                            errors[`batch_${index}_quantity`]
+                                                                ? 'border-[#DC2626]'
+                                                                : 'border-[#E5E7EB]'
+                                                        }`}
+                                                    >
                                                         <button
                                                             type="button"
-                                                            onClick={() => handleUpdateBatchQty(index, -1)}
+                                                            onClick={() =>
+                                                                handleUpdateBatchQty(index, -1)
+                                                            }
                                                             className="flex h-full w-12 items-center justify-center bg-[#F8FAFC] text-[#4B5563] font-bold border-r border-[#E5E7EB] transition hover:bg-[#F1F5F9] cursor-pointer"
                                                         >
                                                             —
@@ -794,40 +959,68 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                                         <input
                                                             type="text"
                                                             value={batch.quantity}
-                                                            onChange={(e) => handleBatchQtyChange(index, e.target.value)}
+                                                            onChange={(e) =>
+                                                                handleBatchQtyChange(
+                                                                    index,
+                                                                    e.target.value,
+                                                                )
+                                                            }
                                                             className="w-12 text-center text-sm font-semibold text-[#111827] outline-none border-none bg-transparent"
                                                         />
                                                         <button
                                                             type="button"
-                                                            onClick={() => handleUpdateBatchQty(index, 1)}
+                                                            onClick={() =>
+                                                                handleUpdateBatchQty(index, 1)
+                                                            }
                                                             className="flex h-full w-12 items-center justify-center bg-[#F8FAFC] text-[#2563EB] font-bold border-l border-[#E5E7EB] transition hover:bg-[#F1F5F9] cursor-pointer"
                                                         >
                                                             +
                                                         </button>
                                                     </div>
                                                     {errors[`batch_${index}_quantity`] && (
-                                                        <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_quantity`]}</p>
+                                                        <p className="text-xs text-[#DC2626]">
+                                                            {errors[`batch_${index}_quantity`]}
+                                                        </p>
                                                     )}
                                                 </div>
 
                                                 {/* Weight per carton/sack (Loose only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors[`batch_${index}_weightPerSack`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                                        }`}>
+                                                    <div
+                                                        className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${
+                                                            errors[`batch_${index}_weightPerSack`]
+                                                                ? 'border-[#DC2626]'
+                                                                : 'border-[#E5E7EB]'
+                                                        }`}
+                                                    >
                                                         <input
                                                             type="text"
                                                             placeholder="Enter weight"
                                                             value={batch.weightPerSack}
-                                                            onChange={(e) => handleUpdateBatchRow(index, 'weightPerSack', e.target.value)}
+                                                            onChange={(e) =>
+                                                                handleUpdateBatchRow(
+                                                                    index,
+                                                                    'weightPerSack',
+                                                                    e.target.value,
+                                                                )
+                                                            }
                                                             className="w-full border-none bg-transparent text-sm text-[#111827] outline-none placeholder-[#9CA3AF]"
                                                         />
                                                         <UnitSelectDropdown
                                                             value={batch.weightPerSackUnit}
-                                                            onChange={(val) => handleUpdateBatchRow(index, 'weightPerSackUnit', val)}
+                                                            onChange={(val) =>
+                                                                handleUpdateBatchRow(
+                                                                    index,
+                                                                    'weightPerSackUnit',
+                                                                    val,
+                                                                )
+                                                            }
                                                         />
                                                     </div>
                                                     {errors[`batch_${index}_weightPerSack`] && (
-                                                        <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_weightPerSack`]}</p>
+                                                        <p className="text-xs text-[#DC2626]">
+                                                            {errors[`batch_${index}_weightPerSack`]}
+                                                        </p>
                                                     )}
                                                 </div>
 
@@ -840,23 +1033,44 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
 
                                                 {/* Selling price/per unit (Loose only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors[`batch_${index}_sellingPrice`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                                        }`}>
-                                                        <span className="text-sm text-[#9CA3AF] font-medium">₹</span>
+                                                    <div
+                                                        className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${
+                                                            errors[`batch_${index}_sellingPrice`]
+                                                                ? 'border-[#DC2626]'
+                                                                : 'border-[#E5E7EB]'
+                                                        }`}
+                                                    >
+                                                        <span className="text-sm text-[#9CA3AF] font-medium">
+                                                            ₹
+                                                        </span>
                                                         <input
                                                             type="text"
                                                             placeholder="Placeholder text"
                                                             value={batch.sellingPrice}
-                                                            onChange={(e) => handleUpdateBatchRow(index, 'sellingPrice', e.target.value)}
+                                                            onChange={(e) =>
+                                                                handleUpdateBatchRow(
+                                                                    index,
+                                                                    'sellingPrice',
+                                                                    e.target.value,
+                                                                )
+                                                            }
                                                             className="w-full border-none bg-transparent text-sm text-[#111827] outline-none placeholder-[#9CA3AF]"
                                                         />
                                                         <UnitSelectDropdown
                                                             value={batch.sellingPriceUnit}
-                                                            onChange={(val) => handleUpdateBatchRow(index, 'sellingPriceUnit', val)}
+                                                            onChange={(val) =>
+                                                                handleUpdateBatchRow(
+                                                                    index,
+                                                                    'sellingPriceUnit',
+                                                                    val,
+                                                                )
+                                                            }
                                                         />
                                                     </div>
                                                     {errors[`batch_${index}_sellingPrice`] && (
-                                                        <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_sellingPrice`]}</p>
+                                                        <p className="text-xs text-[#DC2626]">
+                                                            {errors[`batch_${index}_sellingPrice`]}
+                                                        </p>
                                                     )}
                                                 </div>
                                             </>
@@ -868,19 +1082,35 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                                         type="text"
                                                         placeholder="Enter quantity"
                                                         value={batch.quantity}
-                                                        onChange={(e) => handleUpdateBatchRow(index, 'quantity', e.target.value)}
-                                                        className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] bg-white outline-none ${errors[`batch_${index}_quantity`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                                            }`}
+                                                        onChange={(e) =>
+                                                            handleUpdateBatchRow(
+                                                                index,
+                                                                'quantity',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        className={`h-11 w-full rounded-lg border px-4 text-sm text-[#111827] bg-white outline-none ${
+                                                            errors[`batch_${index}_quantity`]
+                                                                ? 'border-[#DC2626]'
+                                                                : 'border-[#E5E7EB]'
+                                                        }`}
                                                     />
                                                     {errors[`batch_${index}_quantity`] && (
-                                                        <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_quantity`]}</p>
+                                                        <p className="text-xs text-[#DC2626]">
+                                                            {errors[`batch_${index}_quantity`]}
+                                                        </p>
                                                     )}
                                                 </div>
 
                                                 {/* Offline selling price (Packaged only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center rounded-lg border bg-white overflow-hidden ${errors[`batch_${index}_sellingPrice`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                                        }`}>
+                                                    <div
+                                                        className={`flex h-11 items-center rounded-lg border bg-white overflow-hidden ${
+                                                            errors[`batch_${index}_sellingPrice`]
+                                                                ? 'border-[#DC2626]'
+                                                                : 'border-[#E5E7EB]'
+                                                        }`}
+                                                    >
                                                         <span className="flex h-full w-10 items-center justify-center bg-[#F8FAFC] text-sm text-[#6B7280] font-medium border-r border-[#E5E7EB]">
                                                             ₹
                                                         </span>
@@ -888,33 +1118,60 @@ export default function EditPurchaseModal({ open, onClose, initialData, selected
                                                             type="text"
                                                             placeholder="Placeholder text"
                                                             value={batch.sellingPrice}
-                                                            onChange={(e) => handleUpdateBatchRow(index, 'sellingPrice', e.target.value)}
+                                                            onChange={(e) =>
+                                                                handleUpdateBatchRow(
+                                                                    index,
+                                                                    'sellingPrice',
+                                                                    e.target.value,
+                                                                )
+                                                            }
                                                             className="w-full border-none bg-transparent px-3 text-sm text-[#111827] outline-none placeholder-[#9CA3AF]"
                                                         />
                                                     </div>
                                                     {errors[`batch_${index}_sellingPrice`] && (
-                                                        <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_sellingPrice`]}</p>
+                                                        <p className="text-xs text-[#DC2626]">
+                                                            {errors[`batch_${index}_sellingPrice`]}
+                                                        </p>
                                                     )}
                                                 </div>
 
                                                 {/* Weight (Packaged only) */}
                                                 <div className="space-y-1">
-                                                    <div className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${errors[`batch_${index}_weight`] ? 'border-[#DC2626]' : 'border-[#E5E7EB]'
-                                                        }`}>
+                                                    <div
+                                                        className={`flex h-11 items-center rounded-lg border bg-white pl-4 pr-2 gap-2 ${
+                                                            errors[`batch_${index}_weight`]
+                                                                ? 'border-[#DC2626]'
+                                                                : 'border-[#E5E7EB]'
+                                                        }`}
+                                                    >
                                                         <input
                                                             type="text"
                                                             placeholder="Enter weight"
                                                             value={batch.weight}
-                                                            onChange={(e) => handleUpdateBatchRow(index, 'weight', e.target.value)}
+                                                            onChange={(e) =>
+                                                                handleUpdateBatchRow(
+                                                                    index,
+                                                                    'weight',
+                                                                    e.target.value,
+                                                                )
+                                                            }
                                                             className="w-full border-none bg-transparent text-sm text-[#111827] outline-none placeholder-[#9CA3AF]"
                                                         />
                                                         <UnitSelectDropdown
                                                             value={batch.weightUnit}
-                                                            onChange={(val) => handleUpdateBatchRow(index, 'weightUnit', val)}
+                                                            onChange={(val) =>
+                                                                handleUpdateBatchRow(
+                                                                    index,
+                                                                    'weightUnit',
+                                                                    val,
+                                                                )
+                                                            }
                                                         />
                                                     </div>
                                                     {errors[`batch_${index}_weight`] && (
-                                                        <p className="text-xs text-[#DC2626]">{errors[`batch_${index}_weight`]}</p>
+                                                        <p className="text-xs text-[#DC2626]">
+                                                            {errors[`batch_${index}_weight`]}
+                                                        </p>
                                                     )}
                                                 </div>
                                             </>

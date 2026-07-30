@@ -1,6 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BsFileText } from 'react-icons/bs';
-import { HiOutlineDocumentText, HiEllipsisVertical, HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi2';
+import {
+    HiEllipsisVertical,
+    HiOutlineDocumentText,
+    HiOutlinePencil,
+    HiOutlineTrash,
+} from 'react-icons/hi2';
 import { NavLink } from 'react-router';
 import StatusBadge from './common/StatusBadge';
 
@@ -48,7 +53,8 @@ function ActionMenu({ row, onEdit, onDelete }) {
                 <div className="absolute right-0 z-30 mt-1 w-36 origin-top-right rounded-xl border border-[#E5E7EB] bg-white py-1 shadow-lg ring-1 ring-black/5 animate-fadeIn">
                     <button
                         type="button"
-                        onClick={() => {
+                        onClick={(event) => {
+                            event.stopPropagation();
                             setIsOpen(false);
                             onEdit(row);
                         }}
@@ -59,7 +65,8 @@ function ActionMenu({ row, onEdit, onDelete }) {
                     </button>
                     <button
                         type="button"
-                        onClick={() => {
+                        onClick={(event) => {
+                            event.stopPropagation();
                             setIsOpen(false);
                             onDelete(row);
                         }}
@@ -74,7 +81,7 @@ function ActionMenu({ row, onEdit, onDelete }) {
     );
 }
 
-export function PurchaseTable({ rows, onEdit, onDelete }) {
+export function PurchaseTable({ rows, onEdit, onDelete, onRowClick }) {
     return (
         <div className="overflow-hidden border-b border-[#E5E7EB] bg-white shadow-sm">
             <div className="overflow-x-auto">
@@ -106,14 +113,22 @@ export function PurchaseTable({ rows, onEdit, onDelete }) {
                             <tr>
                                 <td colSpan={10} className="px-5 py-12 text-center text-[#6B7280]">
                                     <div className="flex flex-col items-center justify-center gap-1">
-                                        <p className="text-sm font-semibold text-[#374151]">No matching items found</p>
-                                        <p className="text-xs text-[#9CA3AF]">Try searching with a different product name or barcode</p>
+                                        <p className="text-sm font-semibold text-[#374151]">
+                                            No matching items found
+                                        </p>
+                                        <p className="text-xs text-[#9CA3AF]">
+                                            Try searching with a different product name or barcode
+                                        </p>
                                     </div>
                                 </td>
                             </tr>
                         ) : (
                             rows.map((row) => (
-                                <tr key={row.id} className="border-t border-[#E5E7EB] last:border-b-0 transition hover:bg-[#F9FAFF]">
+                                <tr
+                                    key={row.id}
+                                    className={`border-t border-[#E5E7EB] last:border-b-0 transition hover:bg-[#F9FAFF] ${onRowClick ? 'cursor-pointer' : ''}`}
+                                    onClick={() => onRowClick?.(row)}
+                                >
                                     <td className="whitespace-nowrap px-5 py-4 text-sm text-[#6B7280]">
                                         {row.date}
                                     </td>
@@ -141,6 +156,7 @@ export function PurchaseTable({ rows, onEdit, onDelete }) {
                                     <td className="px-5 py-4">
                                         <NavLink
                                             to="#"
+                                            onClick={(event) => event.stopPropagation()}
                                             className="inline-flex h-9 items-center whitespace-nowrap rounded-xl border border-[#E5E7EB] bg-white px-3 text-[11px] font-medium text-[#374151] transition hover:bg-[#F8FAFF]"
                                         >
                                             View Documents

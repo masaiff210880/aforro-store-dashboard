@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import BreadcrumbHeader from '../components/common/BreadcrumbHeader';
 import TableControlBar from '../components/common/TableControlBar';
-import { PurchaseTable } from '../components/PurchaseTable';
 import AddPurchaseModal from '../components/modal/AddPurchaseModal';
-import EditPurchaseModal from '../components/modal/EditPurchaseModal';
 import DeleteConfirmModal from '../components/modal/DeleteConfirmModal';
-import { purchaseRows } from '../data/purchaseMockData';
+import EditPurchaseModal from '../components/modal/EditPurchaseModal';
+import { PurchaseTable } from '../components/PurchaseTable';
 import { useToast } from '../context/ToastContext';
+import { purchaseRows } from '../data/purchaseMockData';
 
 export default function Purchase() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,6 +18,7 @@ export default function Purchase() {
     const [searchQuery, setSearchQuery] = useState('');
 
     const { showToast } = useToast();
+    const navigate = useNavigate();
 
     const handleAddPurchase = (newPurchase) => {
         setRows((prev) => [newPurchase, ...prev]);
@@ -24,7 +26,7 @@ export default function Purchase() {
 
     const handleUpdatePurchase = (updatedPurchase) => {
         setRows((prev) =>
-            prev.map((item) => (item.id === updatedPurchase.id ? updatedPurchase : item))
+            prev.map((item) => (item.id === updatedPurchase.id ? updatedPurchase : item)),
         );
         setEditingPurchase(null);
     };
@@ -78,6 +80,9 @@ export default function Purchase() {
                         rows={filteredRows}
                         onEdit={(row) => setEditingPurchase(row)}
                         onDelete={(row) => setDeletingPurchase(row)}
+                        onRowClick={(row) =>
+                            navigate(`/inventory/purchase/${row.id}`, { state: { purchase: row } })
+                        }
                     />
                 </div>
             </section>

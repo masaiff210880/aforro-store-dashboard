@@ -5,6 +5,7 @@ import CreditNotes from './pages/CreditNotes';
 import Dashboard from './pages/Dashboard';
 import Discrepancies from './pages/Discrepancies';
 import InventoryAdjustment from './pages/InventoryAdjustment';
+import InventoryDetails from './pages/InventoryDetails';
 import Login from './pages/Login';
 import MyInventory from './pages/MyInventory';
 import NotFound from './pages/NotFound';
@@ -13,6 +14,7 @@ import OnlineOrders from './pages/OnlineOrders';
 import OrderHistory from './pages/OrderHistory';
 import POSBilling from './pages/POSBilling';
 import Purchase from './pages/Purchase';
+import PurchaseDetails from './pages/PurchaseDetails';
 import ReturnPage from './pages/ReturnPage';
 import ReturnReplacement from './pages/ReturnReplacement';
 import Settings from './pages/Settings';
@@ -32,7 +34,9 @@ export default function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/inventory/my-inventory" element={<MyInventory />} />
                 <Route path="/inventory/purchase" element={<Purchase />} />
+                <Route path="/inventory/purchase/:id" element={<PurchaseDetails />} />
                 <Route path="/inventory/inventory-adjustment" element={<InventoryAdjustment />} />
+                <Route path="/inventory/inventory-adjustment/:id" element={<InventoryDetails />} />
                 <Route path="/online-orders" element={<OnlineOrders />} />
                 <Route path="/settlement-payout" element={<SettlementPayout />} />
                 <Route path="/order-history" element={<OrderHistory />} />
