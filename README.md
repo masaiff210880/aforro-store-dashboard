@@ -53,7 +53,7 @@ A modern, high-performance Inventory and Management Admin Dashboard built with *
 ## 📁 Folder Structure
 
 ```
-react-vite-sales-dashboard/
+aforro-store-dashboard/
 ├── src/
 │   ├── assets/                # Static assets & brand media
 │   ├── components/            # UI Components
@@ -99,8 +99,8 @@ react-vite-sales-dashboard/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/masaiff210880/react-vite-sales-dashboard.git
-   cd react-vite-sales-dashboard
+   git clone https://github.com/masaiff210880/aforro-store-dashboard.git
+   cd aforro-store-dashboard
    ```
 
 2. **Install dependencies**
