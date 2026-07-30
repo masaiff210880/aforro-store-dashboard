@@ -1,6 +1,6 @@
 # Shelf OS Dashboard
 
-A modern, high-performance Inventory and Management Admin Dashboard built with **React 19**, **Vite 8**, **Tailwind CSS v4**, **Redux Toolkit**, and **React Router 7**.
+A modern, high-performance Inventory and Management Admin Dashboard built with **React 19**, **Vite 8**, **Tailwind CSS v4**, and **React Router 7**.
 
 ---
 
@@ -11,7 +11,7 @@ A modern, high-performance Inventory and Management Admin Dashboard built with *
 | **Framework** | React 19 |
 | **Build Tool** | Vite 8 |
 | **Routing** | React Router 7 |
-| **State Management** | Redux Toolkit (RTK Query) |
+| **State Management** | React State Hooks (`useState`, `useMemo`) & Context API (`ToastContext`) |
 | **Styling** | Tailwind CSS v4 |
 | **Icons** | React Icons (`hi2`, `bs`) |
 
@@ -57,7 +57,7 @@ aforro-store-dashboard/
 ├── src/
 │   ├── assets/                # Static assets & brand media
 │   ├── components/            # UI Components
-│   │   ├── common/            # Reusable UI (Button, StatusBadge, BreadcrumbHeader, PageShell, etc.)
+│   │   ├── common/            # Reusable UI (Button, PasswordInput, StatusBadge, BreadcrumbHeader, PageShell, etc.)
 │   │   ├── modal/             # Modal dialogs & custom dropdowns
 │   │   │   ├── AddPurchaseModal.jsx
 │   │   │   ├── AddInventoryAdjustmentModal.jsx
@@ -68,16 +68,10 @@ aforro-store-dashboard/
 │   │   ├── PurchaseTable.jsx
 │   │   ├── Header.jsx
 │   │   └── Sidebar.jsx
-│   ├── context/               # React Context (Toast notifications)
-│   ├── data/                  # Mock data & sidebar menu configuration
+│   ├── context/               # React Context (ToastContext for notifications)
+│   ├── data/                  # Mock datasets (Inventory, Purchase) & sidebar menu config
 │   ├── layouts/               # App Layouts (AuthLayout, DashboardLayout)
-│   ├── pages/                 # Page Views
-│   │   ├── Dashboard.jsx
-│   │   ├── Purchase.jsx
-│   │   ├── InventoryAdjustment.jsx
-│   │   ├── Login.jsx
-│   │   └── NotFound.jsx
-│   ├── redux-toolkit/         # Redux store & RTK Query services
+│   ├── pages/                 # Page Views (Dashboard, Purchase, InventoryAdjustment, Login, POSBilling, etc.)
 │   ├── App.jsx                # Application routes configuration
 │   ├── main.jsx               # Application entry point
 │   └── index.css              # Global styles & Tailwind configuration
