@@ -10,7 +10,7 @@ export default function DashboardLayout() {
         <div className="h-screen overflow-hidden bg-[#F5F6FA]">
             <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-            <div className="flex h-screen flex-col lg:ml-[260px]">
+            <div className="flex h-screen flex-col lg:ml-[285px]">
                 <Header onMenuToggle={() => setSidebarOpen(true)} />
 
                 <main className="min-h-0 flex-1 overflow-y-auto px-0 py-0">

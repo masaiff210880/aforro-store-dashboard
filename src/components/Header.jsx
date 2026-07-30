@@ -66,7 +66,7 @@ export default function Header({ onMenuToggle }) {
                     </div>
 
                     {/* Search Input Box: Placed below Title Label on Mobile, Inline on Desktop */}
-                    <div className="w-full lg:max-w-[420px]">
+                    <div className="w-full lg:max-w-[320px]">
                         <div className="relative w-full">
                             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9CA3AF]">
                                 <HiOutlineMagnifyingGlass className="h-4 w-4" />
@@ -74,7 +74,7 @@ export default function Header({ onMenuToggle }) {
                             <input
                                 type="search"
                                 placeholder="Search"
-                                className="h-10 sm:h-11 w-full rounded-full border border-[#E5E7EB] bg-[#F8FAFF] py-2 pl-11 pr-4 text-sm text-[#111827] placeholder:text-[#9CA3AF] outline-none transition focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
+                                className="h-10 sm:h-11 w-full rounded-xl border border-[#E5E7EB] bg-[#F8FAFF] py-2 pl-11 pr-4 text-sm text-[#111827] placeholder:text-[#9CA3AF] outline-none transition focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20"
                             />
                         </div>
                     </div>

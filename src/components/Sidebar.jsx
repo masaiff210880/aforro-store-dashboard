@@ -114,7 +114,7 @@ export default function Sidebar({ isOpen, onClose }) {
                                                     }`
                                                 }
                                             >
-                                                <span className="ml-8 truncate">{child.name}</span>
+                                                <span className="ml-6 whitespace-nowrap">{child.name}</span>
                                                 {child.badge ? (
                                                     <span className="ml-auto inline-flex h-5 items-center justify-center rounded-full bg-[#FEE2E2] px-2 text-[11px] font-semibold text-[#B91C1C]">
                                                         {child.badge}
@@ -134,7 +134,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
     return (
         <>
-            <aside className="fixed inset-y-0 left-0 z-40 hidden h-screen w-[260px] flex-col border-r border-[#F0F0F0] bg-white lg:flex">
+            <aside className="fixed inset-y-0 left-0 z-40 hidden h-screen w-[285px] flex-col border-r border-[#F0F0F0] bg-white lg:flex">
                 {sidebarContent}
             </aside>
 
@@ -147,7 +147,7 @@ export default function Sidebar({ isOpen, onClose }) {
             )}
 
             <aside
-                className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[#F0F0F0] bg-white transition-transform duration-300 lg:hidden ${
+                className={`fixed inset-y-0 left-0 z-50 flex w-[285px] flex-col border-r border-[#F0F0F0] bg-white transition-transform duration-300 lg:hidden ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
