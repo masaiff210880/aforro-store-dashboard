@@ -1,5 +1,6 @@
+import { useState, useEffect, useRef } from 'react';
 import { BsFileText } from 'react-icons/bs';
-import { HiOutlineDocumentText } from 'react-icons/hi2';
+import { HiOutlineDocumentText, HiEllipsisVertical, HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi2';
 import { NavLink } from 'react-router';
 import StatusBadge from './common/StatusBadge';
 
@@ -14,11 +15,70 @@ function ProductCell({ product }) {
     );
 }
 
-export function PurchaseTable({ rows }) {
+function ActionMenu({ row, onEdit, onDelete }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        }
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
+
+    return (
+        <div className="relative inline-block text-left" ref={menuRef}>
+            <button
+                type="button"
+                onClick={() => setIsOpen((prev) => !prev)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#E5E7EB] bg-white text-[#475569] transition hover:bg-[#F8FAFF] hover:text-[#111827] cursor-pointer"
+                title="Actions"
+            >
+                <HiEllipsisVertical className="h-5 w-5" />
+            </button>
+
+            {isOpen && (
+                <div className="absolute right-0 z-30 mt-1 w-36 origin-top-right rounded-xl border border-[#E5E7EB] bg-white py-1 shadow-lg ring-1 ring-black/5 animate-fadeIn">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setIsOpen(false);
+                            onEdit(row);
+                        }}
+                        className="flex w-full items-center px-4 py-2 text-xs font-medium text-[#374151] hover:bg-[#F3F4F6] hover:text-[#111827] transition cursor-pointer"
+                    >
+                        <HiOutlinePencil className="mr-2.5 h-4 w-4 text-[#2563EB]" />
+                        Edit
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setIsOpen(false);
+                            onDelete(row);
+                        }}
+                        className="flex w-full items-center px-4 py-2 text-xs font-medium text-[#DC2626] hover:bg-red-50 transition cursor-pointer"
+                    >
+                        <HiOutlineTrash className="mr-2.5 h-4 w-4 text-[#DC2626]" />
+                        Delete
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export function PurchaseTable({ rows, onEdit, onDelete }) {
     return (
         <div className="overflow-hidden border-b border-[#E5E7EB] bg-white shadow-sm">
             <div className="overflow-x-auto">
-                <table className="min-w-[1100px] w-full border-collapse text-left text-sm">
+                <table className="min-w-[1150px] w-full border-collapse text-left text-sm">
                     <thead className="bg-[#F8FAFF]">
                         <tr className="text-xs font-semibold text-[#475569]">
                             <th className="whitespace-nowrap px-5 py-4 font-semibold">
@@ -35,13 +95,16 @@ export function PurchaseTable({ rows }) {
                             <th className="whitespace-nowrap px-5 py-4 font-semibold">
                                 Product Type
                             </th>
-                            <th className="whitespace-nowrap px-5 py-4 font-semibold" />
+                            <th className="whitespace-nowrap px-5 py-4 font-semibold">Documents</th>
+                            <th className="whitespace-nowrap px-5 py-4 font-semibold text-right">
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {rows.length === 0 ? (
                             <tr>
-                                <td colSpan={9} className="px-5 py-12 text-center text-[#6B7280]">
+                                <td colSpan={10} className="px-5 py-12 text-center text-[#6B7280]">
                                     <div className="flex flex-col items-center justify-center gap-1">
                                         <p className="text-sm font-semibold text-[#374151]">No matching items found</p>
                                         <p className="text-xs text-[#9CA3AF]">Try searching with a different product name or barcode</p>
@@ -78,11 +141,14 @@ export function PurchaseTable({ rows }) {
                                     <td className="px-5 py-4">
                                         <NavLink
                                             to="#"
-                                            className="inline-flex h-10 items-center whitespace-nowrap rounded-xl border border-[#E5E7EB] bg-white px-4 text-[11px] font-medium text-[#374151] transition hover:bg-[#F8FAFF]"
+                                            className="inline-flex h-9 items-center whitespace-nowrap rounded-xl border border-[#E5E7EB] bg-white px-3 text-[11px] font-medium text-[#374151] transition hover:bg-[#F8FAFF]"
                                         >
                                             View Documents
                                             <HiOutlineDocumentText className="ml-2 h-4 w-4" />
                                         </NavLink>
+                                    </td>
+                                    <td className="whitespace-nowrap px-5 py-4 text-right">
+                                        <ActionMenu row={row} onEdit={onEdit} onDelete={onDelete} />
                                     </td>
                                 </tr>
                             ))

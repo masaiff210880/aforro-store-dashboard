@@ -33,6 +33,11 @@ A modern, high-performance Inventory and Management Admin Dashboard built with *
   - **Dynamic Multi-Batch Rows**: Add & delete batch rows dynamically with auto-calculated total weights.
   - **UnitSelectDropdown**: Custom unit selection popup positioned above controls (`bottom-full`) to avoid layout jumps.
   - **Flat UI Inputs**: Standardized `rounded-lg` borders without heavy drop shadows.
+- **Table Action Dropdown (Edit & Delete)**:
+  - Row action dropdown with **Edit** (blue pencil icon) and **Delete** (red trash icon) options.
+  - **Edit Purchase Modal (`EditPurchaseModal.jsx`)**: Exact 100% UI layout parity with Create Modal, featuring prefilled row data, live total weight auto-calculation, batch management, and state updates.
+- **Delete Warning Modal (`DeleteConfirmModal.jsx`)**:
+  - Confirmation dialog (*"Are you sure you want to delete this purchase?"*) with warning icon, item context, cancel, and confirm delete actions.
 - **Outlined Status Badges**:
   - `Loose Item` outline badge (`#615FFF`).
   - `Packaged Item` outline badge (`#E17100`).
@@ -40,6 +45,11 @@ A modern, high-performance Inventory and Management Admin Dashboard built with *
 ### 📦 Inventory Adjustment (`/inventory-adjustment`)
 - **Interactive Table Sorting**: Toggle chronological sorting on the **Date** column using double-arrow indicators (`HiChevronUpDown`).
 - **Add Adjustment Modal**: Searchable SKU dropdowns, reason selectors (with sub-conditional pill cards), and quantity stepper controls.
+- **Table Action Dropdown (Edit & Delete)**:
+  - Row action menu with **Edit** and **Delete** dropdown options.
+  - **Edit Adjustment Modal (`EditInventoryAdjustmentModal.jsx`)**: Identical UI layout and conditional pill card reason selectors as Create Modal, prefilled with item data.
+- **Delete Warning Modal (`DeleteConfirmModal.jsx`)**:
+  - Interactive deletion modal asking *"Are you sure you want to delete this adjustment?"* before removing item from state.
 - **Clean Table Formatting**: Standardized title-case headers and `rounded-md` product file icon badges.
 
 ### 🎨 Unified Page Shell & Navigation
@@ -62,7 +72,10 @@ aforro-store-dashboard/
 │   │   ├── common/            # Reusable UI (Button, PasswordInput, StatusBadge, BreadcrumbHeader, PageShell, etc.)
 │   │   ├── modal/             # Modal dialogs & custom dropdowns
 │   │   │   ├── AddPurchaseModal.jsx
+│   │   │   ├── EditPurchaseModal.jsx
 │   │   │   ├── AddInventoryAdjustmentModal.jsx
+│   │   │   ├── EditInventoryAdjustmentModal.jsx
+│   │   │   ├── DeleteConfirmModal.jsx
 │   │   │   ├── SelectDropdown.jsx
 │   │   │   └── UnitSelectDropdown.jsx
 │   │   ├── icons/             # Custom SVG & Navigation Icons
