@@ -134,7 +134,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
     return (
         <>
-            <aside className="fixed inset-y-0 left-0 z-40 hidden h-screen w-[285px] flex-col border-r border-[#F0F0F0] bg-white lg:flex">
+            <aside className="fixed inset-y-0 left-0 z-40 hidden h-[125vh] min-h-[125vh] w-[285px] flex-col border-r border-[#F0F0F0] bg-white lg:flex">
                 {sidebarContent}
             </aside>
 
