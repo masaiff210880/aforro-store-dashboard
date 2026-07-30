@@ -2,6 +2,8 @@
 
 A modern, high-performance Inventory and Management Admin Dashboard built with **React 19**, **Vite 8**, **Tailwind CSS v4**, and **React Router 7**.
 
+🌐 **Live Demo**: [https://aforro-store-dashboard.vercel.app/](https://aforro-store-dashboard.vercel.app/)
+
 ---
 
 ## 🚀 Tech Stack
